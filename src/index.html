@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Carrinhos abandonados — Painel</title>
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <header class="topbar" role="banner">
+    <div class="topbar-left">
+      <div class="logo" aria-hidden="true">Lynxy</div>
+      <div class="search" role="search">
+        <input id="global-search" aria-label="Buscar" placeholder="Buscar por cliente, e-mail ou ID do carrinho..." />
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="btn ghost" type="button">Planos</button>
+      <button class="btn icon" id="notif-btn" title="Notificações" type="button">🔔</button>
+      <div class="user" title="Lucas Souza">
+        <div class="avatar" aria-hidden="true">LS</div>
+        <div class="user-name">Lucas Souza</div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav-bar">
+    <div class="nav-container">
+      <div class="nav-breadcrumb">
+        <span class="nav-link">Checkout</span>
+        <span class="nav-separator">→</span>
+        <span class="nav-link">Produtos</span>
+        <span class="nav-separator">→</span>
+        <span class="nav-current">Carrinhos abandonados</span>
+      </div>
+      <div class="nav-title">
+        <h1>Carrinhos abandonados</h1>
+        <p>Subcentral de carrinhos abandonados.</p>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container" role="main">
+
+    <section class="metrics" aria-label="Métricas">
+      <div class="card">
+        <div class="card-title"><span class="metric-icon">🛒</span> Total de carrinhos</div>
+        <div class="card-value" id="metric-count">—</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="metric-icon">💰</span> Valor total</div>
+        <div class="card-value" id="metric-value">—</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="metric-icon">📈</span> Taxa de recuperação</div>
+        <div class="card-value" id="metric-rate">—</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="metric-icon">💸</span> Recebimento estimado</div>
+        <div class="card-value" id="metric-expected">—</div>
+      </div>
+    </section>
+
+    <section class="controls">
+      <div class="controls-left">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input id="mini-search" aria-label="Buscar na lista" placeholder="Buscar na lista..." />
+        </div>
+      </div>
+      <div class="controls-right">
+        <button class="btn icon" id="filter-btn" title="Filtros">🔍</button>
+      </div>
+    </section>
+
+    <section class="table-wrap" aria-live="polite">
+      <table class="data-table" id="carts-table">
+        <thead>
+          <tr>
+            <th scope="col">Cliente</th>
+            <th scope="col">Itens</th>
+            <th scope="col">Valor</th>
+            <th scope="col">Origem</th>
+            <th scope="col">Status</th>
+            <th scope="col">Data</th>
+            <th scope="col">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+
+      <div class="table-footer">
+        <div id="rows-info">0 itens</div>
+        <div class="pagination">
+          <button class="page-btn" id="prev-page" aria-label="Página anterior">◀</button>
+          <span id="page-num" aria-live="polite">1</span>
+          <button class="page-btn" id="next-page" aria-label="Próxima página">▶</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <span class="footer-text">© 2025 Painel — Todos os direitos reservados.</span>
+      </div>
+      <div class="footer-right">
+        <div class="footer-links">
+          <a href="#" class="footer-link">Termos de Uso</a>
+          <span class="footer-separator">•</span>
+          <a href="#" class="footer-link">Política de Privacidade</a>
+          <span class="footer-separator">•</span>
+          <a href="#" class="footer-link">Contato</a>
+        </div>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Facebook">📘</a>
+          <a href="#" class="social-link" aria-label="Twitter">🐦</a>
+          <a href="#" class="social-link" aria-label="Instagram">📷</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Modal de visualização -->
+  <div id="modal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-panel" role="document">
+      <header class="modal-header">
+        <h2 id="modal-title">Detalhes do Carrinho</h2>
+        <button id="modal-close" class="action-btn" aria-label="Fechar">✕</button>
+      </header>
+      <div class="modal-body" id="modal-body">
+        <div class="cart-details">
+          <div class="cart-header">
+            <div class="client-info">
+              <div class="avatar-large"></div>
+              <div class="client-details">
+                <h3>Nome do Cliente</h3>
+                <p>(11) 99999-9999 • C-000</p>
+                <p class="client-email">email@cliente.com</p>
+                <p class="client-address">Endereço do cliente</p>
+              </div>
+            </div>
+            <div class="cart-summary">
+              <div class="summary-section">
+                <h5>Informações do Carrinho</h5>
+                <div class="summary-item">
+                  <span class="label">Valor Total:</span>
+                  <span class="value">R$ 0,00</span>
+                </div>
+                <div class="summary-item">
+                  <span class="label">Status:</span>
+                  <span class="badge">Novo</span>
+                </div>
+                <div class="summary-item">
+                  <span class="label">Origem:</span>
+                  <span class="origin">WEBSITE</span>
+                </div>
+                <div class="summary-item">
+                  <span class="label">Data de Criação:</span>
+                  <span class="creation-date">—</span>
+                </div>
+                <div class="summary-item">
+                  <span class="label">Tempo Abandonado:</span>
+                  <span class="abandoned-time">—</span>
+                </div>
+                <div class="summary-item">
+                  <span class="label">Total de Itens:</span>
+                  <span class="total-items">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="cart-items">
+            <h4>Itens do Carrinho</h4>
+            <div class="items-grid" id="cart-items-grid"></div>
+          </div>
+        </div>
+      </div>
+      <footer class="modal-footer">
+        <div class="footer-info">
+        </div>
+        <div class="footer-actions">
+          <button id="modal-send" class="btn">Enviar e-mail</button>
+          <button id="modal-call" class="btn">Ligar</button>
+          <button id="modal-whatsapp" class="btn">WhatsApp</button>
+          <button id="modal-close-2" class="btn ghost">Fechar</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Modal backdrop -->
+  <div id="modal-backdrop" class="modal-backdrop"></div>
+
+  <!-- Filter dialog -->
+  <div id="filter-modal" class="filter-modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="filter-backdrop" id="filter-backdrop"></div>
+    <div class="filter-panel" role="document" aria-labelledby="filter-title">
+      <header class="filter-header">
+        <h3 id="filter-title">🔍 Filtros Avançados</h3>
+        <button id="filter-close" class="action-btn" aria-label="Fechar" title="Fechar filtros">✕</button>
+      </header>
+      <div class="filter-body">
+        <form id="filter-form">
+          <div class="field">
+            <label for="f-product">Produto</label>
+            <select id="f-product" name="product">
+              <option value="">Todos os produtos</option>
+              <option value="camisa">Camisa Polo</option>
+              <option value="tenis">Tênis Run</option>
+              <option value="mouse">Mouse Pro</option>
+              <option value="teclado">Teclado Mec</option>
+              <option value="fone">Fone de Ouvido</option>
+              <option value="laptop">Laptop</option>
+              <option value="phone">Smartphone X</option>
+              <option value="case">Case</option>
+              <option value="watch">Relógio</option>
+            </select>
+            <div class="tags" data-field="product">
+              <span class="tag" data-value="upsell">Upsell</span>
+              <span class="tag" data-value="downsell">Downsell</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Método de pagamento</label>
+            <div class="tags" data-field="payment">
+              <span class="tag" data-value="credit">Cartão de crédito</span>
+              <span class="tag" data-value="pix">Pix</span>
+              <span class="tag" data-value="boleto">Boleto</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>Status do carrinho</label>
+            <div class="tags" data-field="status">
+              <span class="tag" data-value="em-progresso">Em progresso</span>
+              <span class="tag" data-value="novo">Novo</span>
+              <span class="tag" data-value="em-processamento">Em processamento</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-origin">Origem / Integração / API</label>
+            <input id="f-origin" name="origin" type="text" placeholder="Digite a origem..." />
+          </div>
+          <div class="field">
+            <label>Período</label>
+            <div class="date-range">
+              <input id="f-date-start" name="dateStart" type="date" />
+              <input id="f-date-end" name="dateEnd" type="date" />
+            </div>
+          </div>
+
+          <div class="filter-actions">
+            <button type="button" class="btn ghost" id="filter-reset" title="Limpar todos os filtros">Limpar</button>
+            <button type="submit" class="btn" title="Aplicar filtros">Aplicar filtros</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <template id="row-template">
+    <tr class="table-row">
+      <td class="col-client">
+        <div class="client">
+          <div class="avatar-sm">AB</div>
+          <div class="client-meta">
+            <div class="client-name">Nome</div>
+            <div class="client-sub">(11) 99999-9999 • C-000</div>
+          </div>
+        </div>
+      </td>
+      <td class="col-items"><div class="items-list"></div></td>
+      <td class="col-value">R$0,00</td>
+      <td class="col-origin">WEBSITE</td>
+      <td class="col-status"><span class="badge">Novo</span></td>
+      <td class="col-date">23min</td>
+      <td class="col-actions">
+        <div class="actions">
+          <button class="action-btn send" title="Enviar e-mail" type="button">✉️</button>
+          <button class="action-btn view" title="Visualizar" type="button">👁️</button>
+          <button class="action-btn delete" title="Remover" type="button">🗑️</button>
+        </div>
+      </td>
+    </tr>
+  </template>
+
+  <script src="components/main.js" defer></script>
+</body>
+</html>

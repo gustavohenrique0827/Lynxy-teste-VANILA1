@@ -1,0 +1,22 @@
+{
+  "name": "react-like-vanilla",
+  "version": "1.0.0",
+  "description": "A project that replicates the functionalities of a React application using only HTML, CSS, and JavaScript.",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "live-server src",
+    "test": "jest"
+  },
+  "keywords": [
+    "vanilla",
+    "javascript",
+    "html",
+    "css"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^27.0.0",
+    "live-server": "^1.2.1"
+  }
+}
